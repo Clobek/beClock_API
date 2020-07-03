@@ -24,7 +24,7 @@ const auth = async (req, res, next) => {
   }
 
 //Show\\
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const alarms = await Alarm.find({userID: req.user.username});
         res.status(200).json(alarms);
@@ -33,10 +33,28 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
+router.get('/default', async (req, res) => {
+    try {
+        const alarms = await Alarm.find({userID: 'Admin'});
+        res.status(200).json(alarms);
+    } catch(error) {
+        res.status(400).json(error)
+    }
+});
+
 //CREATE\\
-router.post('/', auth, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         Alarm.create({url: req.body.url, userID: req.user.username});
+    } catch(error) {
+        res.status(400).json(error);
+    }
+})
+
+//CREATE ADMIN\\
+router.post('/0110000101100100011011010110100101101110', async (req, res) => {
+    try {
+        Alarm.create({url: req.body.url, userID: 'Admin'});
     } catch(error) {
         res.status(400).json(error);
     }
@@ -56,7 +74,7 @@ router.put('/:id', async (req, res) => {
 })
 
 //DELETE\\
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         await Alarm.findByIdAndDelete(req.params.id)
     } catch(error) {
