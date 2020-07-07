@@ -33,9 +33,9 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/default', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        const alarms = await Alarm.find({userID: 'Admin'});
+        const alarms = await Alarm.find({genre: req.params.id});
         res.status(200).json(alarms);
     } catch(error) {
         res.status(400).json(error)
@@ -45,16 +45,7 @@ router.get('/default', async (req, res) => {
 //CREATE\\
 router.post('/', async (req, res) => {
     try {
-        Alarm.create({url: req.body.url, userID: req.user.username});
-    } catch(error) {
-        res.status(400).json(error);
-    }
-})
-
-//CREATE ADMIN\\
-router.post('/0110000101100100011011010110100101101110', async (req, res) => {
-    try {
-        Alarm.create({url: req.body.url, userID: 'Admin'});
+        Alarm.create({url: req.body.url, userID: 'Belock', title: req.body.title, artist: req.body.artist, genre: req.body.genre});
     } catch(error) {
         res.status(400).json(error);
     }
